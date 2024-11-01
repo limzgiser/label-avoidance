@@ -10,7 +10,7 @@ class Collision {
         [key: number | string]: RangeLabel
     }
 
-    private rectangles = {}
+    private rectangles: any = {}
 
     // private overLaps = {}
 
@@ -20,9 +20,12 @@ class Collision {
         this.init()
     }
 
+    public getRectangle() {
+        return this.rectangles
+    }
+
     private init() {
         this.rectangles = this.generageRectangle()
-        // this.overLaps = this.getOverlaps()
     }
 
     // 获取标注外包矩形
@@ -61,6 +64,52 @@ class Collision {
         }
 
         return result
+
+    }
+
+
+
+    public reflectRectangle(id: number | string) {
+        const rect: Rectangle = this.rectangles[id]
+        if (!rect) return
+
+        const label: RangeLabel = this.source[id]
+        if (!label) return
+
+        rect.reflect(label.start, label.end)
+    }
+
+    public checkValidAvoid(id: number | string) {
+
+        const overlaps = this.getOverlaps()
+
+        return !Object.keys(overlaps).includes(id as string)
+    }
+
+    public optimize() {
+        // 反转避让
+
+        const overLaps = this.getOverlaps()
+
+        const ids = Object.keys(overLaps)
+
+        if (!ids.length) return
+
+        for (let i = 0; i < ids.length; i++) {
+
+            const id = ids[i]
+
+            this.reflectRectangle(id)
+
+            const valid = this.checkValidAvoid(id)
+
+            if (valid) {
+                console.log('有效避让:', id)
+            } else {
+                this.reflectRectangle(id)
+            }
+
+        }
 
     }
 

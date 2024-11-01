@@ -13,6 +13,10 @@ class Rectangle {
         return this._points
     }
 
+    set points(value) {
+        this._points = value
+    }
+
     get props() {
         return this._props
     }
@@ -23,6 +27,7 @@ class Rectangle {
 
         this._props = props
     }
+
 
     public getBoundingBox() {
         const xs = this.points.map((p: SF_Point) => p.x);
@@ -104,7 +109,9 @@ class Rectangle {
             return reflectedPoint;
         }
 
-        return this._points.map((point: any) => reflectPointAcrossLine(point));
+        const points = this._points.map((point: any) => reflectPointAcrossLine(point));
+
+        this.points = points
 
     }
 

@@ -33,9 +33,12 @@ onMounted(() => {
 
   const collision = new Collision(data);
 
-  const overlapData = collision.getOverlaps();
+  collision.optimize();
 
-  console.log(overlapData);
+  // 重叠的标签
+  const overlapData = collision.getRectangle();
+
+  // console.log(overlapData);
 
   const keys = Object.keys(overlapData);
 
@@ -48,13 +51,8 @@ onMounted(() => {
   for (let i = 0; i < keys.length; i++) {
     const id = keys[i];
     const rect: Rectangle = overlapData[id];
-    const source: RangeLabel = data[id];
 
-    let reflact = rect.reflect(source.start, source.end);
-
-    console.log(reflact);
-
-    const [p1, p2, p3, p4] = reflact;
+    const [p1, p2, p3, p4] = rect.points;
     const path = new Konva.Shape({
       sceneFunc: function (context, shape) {
         context.beginPath();
