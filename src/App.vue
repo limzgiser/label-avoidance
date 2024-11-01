@@ -28,46 +28,46 @@ onMounted(() => {
 
   stage.add(layer);
 
-  // const data = randomData(layer);
+  const data = randomData(layer);
 
-  const data = {
-    11: new RangeLabel(
-      {
-        id: 11,
-        start: {
-          x: 100,
-          y: 100,
-        },
+  // const data = {
+  //   11: new RangeLabel(
+  //     {
+  //       id: 11,
+  //       start: {
+  //         x: 100,
+  //         y: 100,
+  //       },
 
-        end: {
-          x: 200,
-          y: 200,
-        },
+  //       end: {
+  //         x: 200,
+  //         y: 200,
+  //       },
 
-        thinkness: 10,
-        offset: [0, 0],
-      },
-      layer
-    ),
-    12: new RangeLabel(
-      {
-        id: 12,
-        start: {
-          x: 100,
-          y: 200,
-        },
+  //       thinkness: 10,
+  //       offset: [0, 0],
+  //     },
+  //     layer
+  //   ),
+  //   12: new RangeLabel(
+  //     {
+  //       id: 12,
+  //       start: {
+  //         x: 100,
+  //         y: 200,
+  //       },
 
-        end: {
-          x: 200,
-          y: 100,
-        },
+  //       end: {
+  //         x: 200,
+  //         y: 100,
+  //       },
 
-        thinkness: 10,
-        offset: [0, 0],
-      },
-      layer
-    ),
-  };
+  //       thinkness: 10,
+  //       offset: [0, 0],
+  //     },
+  //     layer
+  //   ),
+  // };
 
   Object.keys(data).forEach((key) => {
     data[key].render();

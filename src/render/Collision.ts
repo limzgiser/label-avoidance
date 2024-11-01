@@ -97,11 +97,11 @@ class Collision {
         const valid = this.checkValidAvoid(id)
 
         if (valid) {
-            console.log('[镜像] 有 效避让:', id)
+            // console.log('[镜像] 有 效避让:', id)
             result = true
         } else {
             this.reflectRectangle(id)
-            console.log('[镜像] 无  效避让:', id)
+            // console.log('[镜像] 无  效避让:', id)
         }
 
         return result
@@ -112,19 +112,19 @@ class Collision {
     public moveAvoid(id: string | number) {
 
         const label: RangeLabel = this.source[id]
-        if (!label) return
+        if (!label) return false
 
         const points = label.points.slice()
 
         const rectangle: Rectangle = this.rectangles[id]
 
 
-        if (!rectangle) return
+        if (!rectangle) return false
 
-        if (label.maxMovex <= 0) return
+        if (label.maxMovex <= 0) return false
 
         const length = label.getLength()
-        if (length <= 0) return
+        if (length <= 0) return false
 
         const step = label.maxMovex / MOVE_X_TIMES
 
@@ -138,7 +138,7 @@ class Collision {
                 const valid = this.checkValidAvoid(id)
 
                 if (valid) {
-                    console.log('[移动X] 有 效避让:', id)
+                    // console.log('[移动X] 有 效避让:', id)
                     result = true
                     break
                 }
@@ -149,15 +149,17 @@ class Collision {
 
         const moveFront = checkMove(label.start, label.end)
 
-        if (moveFront) return
+        if (moveFront) return true
 
         const moveBack = checkMove(label.end, label.start)
 
-        if (moveBack) return
+        if (moveBack) return true
 
         rectangle.points = points
 
-        console.log('[移动X] 无 效避让:', id)
+        return false
+
+        // console.log('[移动X] 无 效避让:', id)
 
     }
 
@@ -168,16 +170,32 @@ class Collision {
 
         const ids = Object.keys(overLaps)
 
+        let mirro = 0
+        let move = 0
 
         if (!ids.length) return
 
         for (let i = 0; i < ids.length; i++) {
             const id = ids[i]
-            // const avoid = this.mirrorAvoid(id)
-            // if (avoid) continue
+            let avoid = this.mirrorAvoid(id)
+            if (avoid) {
+                mirro++
+                continue
+            }
 
-            this.moveAvoid(id)
+            avoid = this.moveAvoid(id)
+
+            if (avoid) {
+                move++
+            }
         }
+
+        console.log('累计重叠标注:', ids.length)
+
+        console.log('镜像避让:', mirro)
+
+        console.log('移动避让:', move)
+
     }
 
 }

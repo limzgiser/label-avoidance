@@ -1,4 +1,4 @@
-const DATA_COUNT = 11
+const DATA_COUNT = 22
 
 const LABEL_OFFSET_Y = 3        // 标注距离标注线的偏移量
 
