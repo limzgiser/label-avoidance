@@ -12,6 +12,7 @@ import { randomData } from "./Tools/Tools";
 import { Collision } from "./render/Collision";
 import { Rectangle } from "./render/Rectangle";
 import { RangeLabel } from "./render/RangleLabel";
+import { THINKNESS } from "./Constants";
 
 onMounted(() => {
   const width = window.innerWidth;
@@ -27,8 +28,50 @@ onMounted(() => {
 
   stage.add(layer);
 
-  const data = randomData(layer);
+  // const data = randomData(layer);
 
+  const data = {
+    11: new RangeLabel(
+      {
+        id: 11,
+        start: {
+          x: 100,
+          y: 100,
+        },
+
+        end: {
+          x: 200,
+          y: 200,
+        },
+
+        thinkness: 10,
+        offset: [0, 0],
+      },
+      layer
+    ),
+    12: new RangeLabel(
+      {
+        id: 12,
+        start: {
+          x: 100,
+          y: 200,
+        },
+
+        end: {
+          x: 200,
+          y: 100,
+        },
+
+        thinkness: 10,
+        offset: [0, 0],
+      },
+      layer
+    ),
+  };
+
+  Object.keys(data).forEach((key) => {
+    data[key].render();
+  });
   layer.draw();
 
   const collision = new Collision(data);
@@ -38,15 +81,11 @@ onMounted(() => {
   // 重叠的标签
   const overlapData = collision.getRectangle();
 
-  // console.log(overlapData);
-
   const keys = Object.keys(overlapData);
 
   const _group = new Konva.Group();
 
   layer.add(_group);
-
-  layer.draw();
 
   for (let i = 0; i < keys.length; i++) {
     const id = keys[i];
@@ -71,6 +110,8 @@ onMounted(() => {
 
     _group.add(path);
   }
+
+  layer.draw();
 });
 </script>
 

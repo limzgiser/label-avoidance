@@ -1,5 +1,6 @@
 import Konva from "konva"
 import { SF_Point } from "./Types"
+import { LABEL_OFFSET_Y } from "../Constants"
 
 
 class RangeLabel {
@@ -14,11 +15,12 @@ class RangeLabel {
     private _end: SF_Point
 
     private _thinkness: number
-
     private _offset = [0, 0]
     private _points: Array<SF_Point> = []
 
     private _text: Konva.Text = new Konva.Text()
+
+    private _maxMovex = 0 // 沿着标注方向最大的移动距离
 
 
     get start() { return this._start }
@@ -52,6 +54,9 @@ class RangeLabel {
         return this._id
     }
 
+    get maxMovex() {
+        return this._maxMovex
+    }
     get points() {
         return this._points
     }
@@ -213,7 +218,20 @@ class RangeLabel {
             const angle = Math.atan2(end.y - start.y, end.x - start.x) * (180 / Math.PI);
 
             text.offsetX(this._offset[0] + text.width() / 2);
-            text.offsetY(this._offset[1] + text.height() / 2 - this._thinkness / 1.5);
+
+            const b = this._thinkness > 0 ? -1 : 1
+
+
+            const height = text.height()
+            const width = text.width()
+
+            const len = this.getLength()
+
+            if (len > width) {
+                this._maxMovex = (len - width) / 2
+            }
+
+            text.offsetY(this._offset[1] + height / 2 + b * (height / 2 + LABEL_OFFSET_Y));
 
             text.rotation(angle);
 

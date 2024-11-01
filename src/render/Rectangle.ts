@@ -71,7 +71,11 @@ class Rectangle {
         return !(projA.max < projB.min || projB.max < projA.min);
     }
 
-
+    /**
+     * 矩形沿线镜像
+     * @param lineStart 
+     * @param lineEnd 
+     */
     public reflect(lineStart: SF_Point, lineEnd: SF_Point) {
 
         const reflectPointAcrossLine = (point: SF_Point) => {
@@ -115,6 +119,41 @@ class Rectangle {
 
     }
 
+    /**
+     * 沿线移动
+     * @param lineStart 
+     * @param lineEnd 
+     * @param distance 
+     * @returns 
+     */
+    public moveAlongDirection(lineStart: SF_Point, lineEnd: SF_Point, length: number, distance: number) {
+
+
+        const movePoint = (P: SF_Point) => {
+
+            // 计算方向向量
+            const direction = {
+                x: lineEnd.x - lineStart.x,
+                y: lineEnd.y - lineStart.y
+            };
+            if (direction.x == 0 && direction.y == 0) return P
+            // 计算单位方向向量
+            const normalize = {
+                x: direction.x / length,
+                y: direction.y / length
+            };
+            // 计算新的点
+            const result = {
+                x: P.x + normalize.x * distance,
+                y: P.y + normalize.y * distance
+            };
+            return result;
+        }
+
+        const points = this._points.map((point: SF_Point) => movePoint(point))
+        this.points = points
+
+    }
 }
 
 export {

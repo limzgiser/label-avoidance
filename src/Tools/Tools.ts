@@ -1,9 +1,9 @@
 import Konva from "konva"
 import { RangeLabel } from "../render/RangleLabel"
-import { DATA_COUNT } from "../Constants"
+import { DATA_COUNT, THINKNESS } from "../Constants"
 
 const randomData = (layer: Konva.Layer) => {
-    const labels = []
+    let labels: any = {}
 
     for (let i = 0; i < DATA_COUNT; i++) {
 
@@ -18,13 +18,13 @@ const randomData = (layer: Konva.Layer) => {
                 x: Math.floor(600 * Math.random()), y: Math.floor(10 + 600 * Math.random())
             },
 
-            thinkness: Math.floor(25 * (Math.random() < 0.5 ? -1 : 1)),
+            thinkness: Math.floor(THINKNESS * (Math.random() < 0.5 ? -1 : 1)),
             offset: [0, 0]
         }, layer)
 
         label.render()
 
-        labels.push(label)
+        labels[i] = (label)
 
     }
 
