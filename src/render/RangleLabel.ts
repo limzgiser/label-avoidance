@@ -5,7 +5,7 @@ import { LABEL_OFFSET_Y } from "../Constants"
 
 class RangeLabel {
 
-    private opitons: any = null
+
     private _layer: any = null
     private _group: any = null
 
@@ -60,6 +60,28 @@ class RangeLabel {
     get points() {
         return this._points
     }
+
+    set points(value) {
+        this._points = value
+    }
+
+
+    get thinkness() {
+        return this._thinkness
+    }
+
+    set thinkness(value: number) {
+        this._thinkness = value
+    }
+
+    get offset() {
+        return this._offset
+    }
+
+    set offset(value) {
+        this._offset = value
+    }
+
 
     get textProperties() {
 
@@ -141,6 +163,10 @@ class RangeLabel {
         this.render()
     }
 
+    update() {
+
+
+    }
     render() {
         this._group.removeChildren()
 
@@ -232,6 +258,8 @@ class RangeLabel {
             }
 
             text.offsetY(this._offset[1] + height / 2 + b * (height / 2 + LABEL_OFFSET_Y));
+            text.offsetX(this._offset[0]);
+
 
             text.rotation(angle);
 

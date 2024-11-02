@@ -111,53 +111,55 @@ class Collision {
      */
     public moveAvoid(id: string | number) {
 
+
         const label: RangeLabel = this.source[id]
-        if (!label) return false
+        if (!label) return 0
 
         const points = label.points.slice()
 
         const rectangle: Rectangle = this.rectangles[id]
 
 
-        if (!rectangle) return false
+        if (!rectangle) return 0
 
-        if (label.maxMovex <= 0) return false
+        if (label.maxMovex <= 0) return 0
 
         const length = label.getLength()
-        if (length <= 0) return false
+        if (length <= 0) return 0
 
         const step = label.maxMovex / MOVE_X_TIMES
 
         const checkMove = (start: SF_Point, end: SF_Point) => {
 
-            let result = false
+            let _step = 0
             for (let i = 0; i < MOVE_X_TIMES; i++) {
 
-                rectangle.moveAlongDirection(start, end, length, step * (i + 1))
+                const tempStep = step * (i + 1)
+
+                rectangle.moveAlongDirection(start, end, length, tempStep)
 
                 const valid = this.checkValidAvoid(id)
 
                 if (valid) {
-                    // console.log('[移动X] 有 效避让:', id)
-                    result = true
+                    _step = tempStep
                     break
                 }
             }
 
-            return result
+            return _step
         }
 
         const moveFront = checkMove(label.start, label.end)
 
-        if (moveFront) return true
+        if (moveFront) return moveFront
 
         const moveBack = checkMove(label.end, label.start)
 
-        if (moveBack) return true
+        if (moveBack) return -moveBack
 
         rectangle.points = points
 
-        return false
+        return 0
 
         // console.log('[移动X] 无 效避让:', id)
 
@@ -177,15 +179,24 @@ class Collision {
 
         for (let i = 0; i < ids.length; i++) {
             const id = ids[i]
+
+            const label = this.source[id]
+
             let avoid = this.mirrorAvoid(id)
             if (avoid) {
+
+                label.thinkness = -label.thinkness
                 mirro++
                 continue
             }
 
-            avoid = this.moveAvoid(id)
+            let step = this.moveAvoid(id)
 
-            if (avoid) {
+            if (step > 0) {
+
+                const [x, y] = label.offset
+
+                label.offset = [x + step, y]
                 move++
             }
         }
@@ -196,6 +207,7 @@ class Collision {
 
         console.log('移动避让:', move)
 
+        Object.values(this.source).forEach(item => item.render())
     }
 
 }
