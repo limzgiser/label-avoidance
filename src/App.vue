@@ -2,17 +2,25 @@
 
 <template>
   <div id="container"></div>
+
+  <div id="result" v-if="result">
+    <div>重叠标签累计:{{ result.total }}</div>
+
+    <div>镜像避让数:{{ result.mirro }}</div>
+
+    <div>移动避让:{{ result.move }}</div>
+
+    <div>未处理避让数:{{ result.overlap }}</div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import Konva from "konva";
 import { randomData } from "./Tools/Tools";
-
 import { Collision } from "./render/Collision";
-import { Rectangle } from "./render/Rectangle";
-import { RangeLabel } from "./render/RangleLabel";
-import { THINKNESS } from "./Constants";
+
+const result: any = ref(null);
 
 onMounted(() => {
   const width = window.innerWidth;
@@ -26,14 +34,13 @@ onMounted(() => {
 
   const layer = new Konva.Layer();
 
-  const imageObj = new Image();
+  // const imageObj = new Image();
 
   const group = new Konva.Group();
 
-  group.zIndex(2)
+  group.zIndex(2);
   layer.add(group);
 
- 
   // imageObj.onload = function () {
   //   const background = new Konva.Image({
   //     x: 0,
@@ -57,86 +64,13 @@ onMounted(() => {
 
   const data = randomData(layer);
 
-  // const data = {
-  //   11: new RangeLabel(
-  //     {
-  //       id: 11,
-  //       start: {
-  //         x: 100,
-  //         y: 100,
-  //       },
-
-  //       end: {
-  //         x: 200,
-  //         y: 200,
-  //       },
-
-  //       thinkness: 10,
-  //       offset: [0, 0],
-  //     },
-  //     layer
-  //   ),
-  //   12: new RangeLabel(
-  //     {
-  //       id: 12,
-  //       start: {
-  //         x: 100,
-  //         y: 200,
-  //       },
-
-  //       end: {
-  //         x: 230,
-  //         y: 100,
-  //       },
-
-  //       thinkness: 10,
-  //       offset: [0, 0],
-  //     },
-  //     layer
-  //   ),
-  // };
-
   Object.keys(data).forEach((key) => {
     data[key].render();
   });
-  layer.draw();
 
   const collision = new Collision(data);
 
-  collision.optimize();
-
-  // // 重叠的标签
-  // const overlapData = collision.getRectangle();
-
-  // const keys = Object.keys(overlapData);
-
-  // const _group = new Konva.Group();
-
-  // layer.add(_group);
-
-  // for (let i = 0; i < keys.length; i++) {
-  //   const id = keys[i];
-  //   const rect: Rectangle = overlapData[id];
-
-  //   const [p1, p2, p3, p4] = rect.points;
-  //   const path = new Konva.Shape({
-  //     sceneFunc: function (context, shape) {
-  //       context.beginPath();
-  //       context.moveTo(p1.x, p1.y);
-  //       context.lineTo(p2.x, p2.y);
-  //       context.lineTo(p3.x, p3.y);
-  //       context.lineTo(p4.x, p4.y);
-
-  //       context.lineTo(p1.x, p1.y);
-  //       context.strokeShape(this);
-  //     },
-
-  //     stroke: "red",
-  //     strokeWidth: 1,
-  //   });
-
-  //   _group.add(path);
-  // }
+  result.value = collision.optimize();
 
   layer.draw();
 });
@@ -146,4 +80,10 @@ onMounted(() => {
 <style scoped>
 /* #container {
 } */
+
+#result {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
 </style>

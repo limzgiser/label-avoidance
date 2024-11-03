@@ -1,8 +1,6 @@
 import { MOVE_X_TIMES, MOVE_Y_TIMES } from "../Constants";
 import { RangeLabel } from "./RangleLabel";
 import { Rectangle } from "./Rectangle";
-import { SF_Point } from "./Types";
-import { cloneDeep, replace } from 'lodash'
 
 /**
  * 标注避让
@@ -208,6 +206,7 @@ class Collision {
 
             const label = this.source[id]
 
+            // 翻转避让
             let avoid = this.mirrorAvoid(id)
             if (avoid) {
                 label.thinkness = -label.thinkness
@@ -215,6 +214,7 @@ class Collision {
                 continue
             }
 
+            // 移动避让
             let step = this.moveAvoid(id)
 
             if (step > 0) {
@@ -224,16 +224,21 @@ class Collision {
 
         }
 
-        console.log('累计重叠标注:', ids.length)
-
-        console.log('镜像避让:', mirro)
-
-        console.log('移动避让:', move)
+        console.log('当前重叠标签:')
 
         console.log(this.getOverlaps())
-   
+
+        const overlap = this.getOverlaps()
+
         Object.values(this.source).forEach(item => item.render())
 
+
+        return {
+            total: ids.length,
+            mirro: mirro,
+            move: move,
+            overlap: Object.keys(overlap).length
+        }
 
     }
 
