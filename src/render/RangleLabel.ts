@@ -108,8 +108,8 @@ class RangeLabel {
         let { x, y, width, height, offsetX, offsetY, rotation } = this.textProperties
 
         if (offset) {
-            offsetX = offset[0]
-            offsetY = offset[1]
+            offsetX += offset[0]
+            offsetY += offset[1]
         }
 
 
@@ -263,6 +263,7 @@ class RangeLabel {
             if (len > width) {
                 this._maxMovex = (len - width) / 2
             }
+
 
             text.offsetY(this._offset[1] + height / 2 + b * (height / 2 + LABEL_OFFSET_Y));
             text.offsetX(this._offset[0] + width / 2);

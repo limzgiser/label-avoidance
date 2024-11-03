@@ -89,7 +89,6 @@ class Collision {
         return !Object.keys(overlaps).includes(id as string)
     }
 
-
     /**
      * 镜像避让
      */
@@ -113,6 +112,7 @@ class Collision {
     }
     /**
      *  移动避让
+     *  这里没得x轴方向移动的正负可能有问题，需要测试
      */
     public moveAvoid(id: string | number) {
 
@@ -132,57 +132,53 @@ class Collision {
         const length = label.getLength()
         if (length <= 0) return 0
 
-        const step = label.maxMovex / MOVE_X_TIMES
+        const step = (label.maxMovex) / MOVE_X_TIMES
 
-        const offset = label.offset.slice()
+        let offset = label.offset.slice()
+
         let udpateOffsetX = 0
 
 
-        const checkMove = (start: SF_Point, end: SF_Point) => {
-
-
+        const checkMove = (dir: 1 | -1) => {
 
             for (let i = 0; i < MOVE_X_TIMES; i++) {
 
-                const tempStep = step * (i + 1)
+                const tempStep = step * (i + 1) * dir
 
-                rectangle.moveAlongDirection(start, end, length, tempStep)
+                // rectangle.moveAlongDirection(end, start, length, tempStep)
+                const points = label.getLabelBoxPoints([tempStep, 0])
 
-                const valid = this.checkValidAvoid(id)
+                if (points) {
 
-                if (valid) {
+                    rectangle.points = points
 
-                    console.log(rectangle.points)
+                    const valid = this.checkValidAvoid(id)
 
-                    let [a] = rectangle.points
-                    let [a1] = points
-
-                    udpateOffsetX = a.x - a1.x
-
-                    label.offset[0] = label.offset[0] + udpateOffsetX
-                    break
+                    if (valid) {
+                        udpateOffsetX = tempStep
+                        label.offset = [offset[0] + udpateOffsetX, offset[1]]
+                        break
+                    }
                 }
+
             }
 
             return udpateOffsetX
         }
 
-        const moveFront = checkMove(label.start, label.end)
+        const moveFront = checkMove(1)
 
         if (moveFront) return moveFront
 
-        const moveBack = checkMove(label.end, label.start)
+        const moveBack = checkMove(-1)
 
         if (moveBack) return moveBack
 
+        rectangle.points = points
 
         label.offset = offset
 
-        rectangle.points = points
-
         return 0
-
-
     }
 
 
@@ -210,23 +206,18 @@ class Collision {
                 }
             }
 
-
             const label = this.source[id]
 
-            // let avoid = this.mirrorAvoid(id)
-            // if (avoid) {
-            //     label.thinkness = -label.thinkness
-            //     mirro++
-            //     continue
-            // }
+            let avoid = this.mirrorAvoid(id)
+            if (avoid) {
+                label.thinkness = -label.thinkness
+                mirro++
+                continue
+            }
 
             let step = this.moveAvoid(id)
 
             if (step > 0) {
-
-                const [x, y] = label.offset
-
-                label.offset = [step, y]
                 move++
                 continue
             }
@@ -238,9 +229,9 @@ class Collision {
         console.log('镜像避让:', mirro)
 
         console.log('移动避让:', move)
+
         console.log(this.getOverlaps())
-
-
+   
         Object.values(this.source).forEach(item => item.render())
 
 
