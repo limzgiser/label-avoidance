@@ -26,6 +26,33 @@ onMounted(() => {
 
   const layer = new Konva.Layer();
 
+  const imageObj = new Image();
+
+  const group = new Konva.Group();
+
+  group.zIndex(2)
+  layer.add(group);
+
+ 
+  // imageObj.onload = function () {
+  //   const background = new Konva.Image({
+  //     x: 0,
+  //     y: 0,
+  //     image: imageObj,
+  //     width: stage.width(),
+  //     height: stage.height(),
+  //   });
+  //   background.zIndex(0);
+  //   // 将背景图片添加到图层
+  //   group.add(background);
+  //   layer.draw(); // 渲染图层
+  // };
+
+  // 设置你的图片路径
+  // imageObj.src = "/public/test.png"; // 替换为你的图片 URL
+
+  // 将背景图片添加到层
+
   stage.add(layer);
 
   const data = randomData(layer);

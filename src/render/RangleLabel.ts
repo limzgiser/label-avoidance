@@ -47,6 +47,8 @@ class RangeLabel {
         this._offset = offset || [0, 0]
         this._layer = layer
         this._group = new Konva.Group()
+
+        this._group.zIndex(5)
         this._layer.add(this._group)
     }
 
