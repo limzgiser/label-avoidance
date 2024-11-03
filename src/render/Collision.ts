@@ -1,7 +1,8 @@
-import { MOVE_X_TIMES } from "../Constants";
+import { MOVE_X_TIMES, MOVE_Y_TIMES } from "../Constants";
 import { RangeLabel } from "./RangleLabel";
 import { Rectangle } from "./Rectangle";
 import { SF_Point } from "./Types";
+import { cloneDeep, replace } from 'lodash'
 
 /**
  * 标注避让
@@ -15,6 +16,8 @@ class Collision {
     private rectangles: any = {}
 
     // private overLaps = {}
+
+    private checkingOverlaps: any = {}
 
     constructor(source: any) {
         this.source = source
@@ -81,6 +84,8 @@ class Collision {
 
         const overlaps = this.getOverlaps()
 
+        this.checkingOverlaps = overlaps
+
         return !Object.keys(overlaps).includes(id as string)
     }
 
@@ -115,10 +120,10 @@ class Collision {
         const label: RangeLabel = this.source[id]
         if (!label) return 0
 
-        const points = label.points.slice()
 
         const rectangle: Rectangle = this.rectangles[id]
 
+        const points = rectangle.points.slice()
 
         if (!rectangle) return 0
 
@@ -129,9 +134,14 @@ class Collision {
 
         const step = label.maxMovex / MOVE_X_TIMES
 
+        const offset = label.offset.slice()
+        let udpateOffsetX = 0
+
+
         const checkMove = (start: SF_Point, end: SF_Point) => {
 
-            let _step = 0
+
+
             for (let i = 0; i < MOVE_X_TIMES; i++) {
 
                 const tempStep = step * (i + 1)
@@ -141,12 +151,20 @@ class Collision {
                 const valid = this.checkValidAvoid(id)
 
                 if (valid) {
-                    _step = tempStep
+
+                    console.log(rectangle.points)
+
+                    let [a] = rectangle.points
+                    let [a1] = points
+
+                    udpateOffsetX = a.x - a1.x
+
+                    label.offset[0] = label.offset[0] + udpateOffsetX
                     break
                 }
             }
 
-            return _step
+            return udpateOffsetX
         }
 
         const moveFront = checkMove(label.start, label.end)
@@ -155,19 +173,24 @@ class Collision {
 
         const moveBack = checkMove(label.end, label.start)
 
-        if (moveBack) return -moveBack
+        if (moveBack) return moveBack
+
+
+        label.offset = offset
 
         rectangle.points = points
 
         return 0
 
-        // console.log('[移动X] 无 效避让:', id)
 
     }
 
+
     public optimize() {
-        // 反转避让
-        const overLaps = this.getOverlaps()
+
+
+
+        let overLaps: any = this.getOverlaps()
 
 
         const ids = Object.keys(overLaps)
@@ -180,15 +203,22 @@ class Collision {
         for (let i = 0; i < ids.length; i++) {
             const id = ids[i]
 
+            if (i > 0) {
+
+                if (!this.checkingOverlaps[id]) {
+                    continue
+                }
+            }
+
+
             const label = this.source[id]
 
-            let avoid = this.mirrorAvoid(id)
-            if (avoid) {
-
-                label.thinkness = -label.thinkness
-                mirro++
-                continue
-            }
+            // let avoid = this.mirrorAvoid(id)
+            // if (avoid) {
+            //     label.thinkness = -label.thinkness
+            //     mirro++
+            //     continue
+            // }
 
             let step = this.moveAvoid(id)
 
@@ -196,9 +226,11 @@ class Collision {
 
                 const [x, y] = label.offset
 
-                label.offset = [x + step, y]
+                label.offset = [step, y]
                 move++
+                continue
             }
+
         }
 
         console.log('累计重叠标注:', ids.length)
@@ -206,8 +238,12 @@ class Collision {
         console.log('镜像避让:', mirro)
 
         console.log('移动避让:', move)
+        console.log(this.getOverlaps())
+
 
         Object.values(this.source).forEach(item => item.render())
+
+
     }
 
 }

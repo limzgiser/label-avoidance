@@ -28,6 +28,13 @@ class Rectangle {
         this._props = props
     }
 
+    public getCenter() {
+        return {
+            x: (this.points[0].x + this.points[2].x) / 2,
+            y: (this.points[0].y + this.points[2].y) / 2
+        }
+    }
+
 
     public getBoundingBox() {
         const xs = this.points.map((p: SF_Point) => p.x);

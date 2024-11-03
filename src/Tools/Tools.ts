@@ -11,11 +11,11 @@ const randomData = (layer: Konva.Layer) => {
 
             id: i,
             start: {
-                x: Math.floor(1000 * Math.random()), y: Math.floor(10 + 800 * Math.random())
+                x: Math.floor(500 * Math.random()), y: Math.floor(10 + 500 * Math.random())
             },
 
             end: {
-                x: Math.floor(600 * Math.random()), y: Math.floor(10 + 600 * Math.random())
+                x: Math.floor(500 * Math.random()), y: Math.floor(10 + 500 * Math.random())
             },
 
             thinkness: Math.floor(THINKNESS * (Math.random() < 0.5 ? -1 : 1)),

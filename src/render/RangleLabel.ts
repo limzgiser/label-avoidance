@@ -1,6 +1,6 @@
 import Konva from "konva"
 import { SF_Point } from "./Types"
-import { LABEL_OFFSET_Y } from "../Constants"
+import { FONST_SIZE, LABEL_LINE_COLOR, LABEL_OFFSET_Y, LABEL_TEXT_COLOR } from "../Constants"
 
 
 class RangeLabel {
@@ -101,11 +101,17 @@ class RangeLabel {
         }
     }
 
-    getLabelBoxPoints() {
+    getLabelBoxPoints(offset?: any) {
 
         if (!this._text) return
 
-        const { x, y, width, height, offsetX, offsetY, rotation } = this.textProperties
+        let { x, y, width, height, offsetX, offsetY, rotation } = this.textProperties
+
+        if (offset) {
+            offsetX = offset[0]
+            offsetY = offset[1]
+        }
+
 
         const corners = [
             { x: -offsetX, y: -offsetY },
@@ -198,7 +204,7 @@ class RangeLabel {
                     context.strokeShape(shape);
                 },
 
-                stroke: '#000',
+                stroke: LABEL_LINE_COLOR,
                 strokeWidth: 1,
             });
 
@@ -208,7 +214,7 @@ class RangeLabel {
         const renderArrow = () => {
             const baseLineLeft = new Konva.Arrow({
                 points: [start.x, start.y, end.x, end.y],
-                stroke: '#000',
+                stroke: LABEL_LINE_COLOR,
                 strokeWidth: 1
             });
 
@@ -217,7 +223,7 @@ class RangeLabel {
 
             const baseLineRight = new Konva.Arrow({
                 points: [end.x, end.y, start.x, start.y],
-                stroke: '#000',
+                stroke: LABEL_LINE_COLOR,
                 strokeWidth: 1,
             });
 
@@ -235,15 +241,16 @@ class RangeLabel {
                 y: (end.y + start.y) / 2,
                 align: 'center',
                 text: this.id + '-' + (label >> 0)/**取整*/,
-                fontSize: 26,
-                fontFamily: 'Calibri',
-                fill: 'black',
+                fontSize: FONST_SIZE,
+
+                fill: LABEL_TEXT_COLOR,
                 listening: false,
+                opacity: 1,
             });
 
             const angle = Math.atan2(end.y - start.y, end.x - start.x) * (180 / Math.PI);
 
-            text.offsetX(this._offset[0] + text.width() / 2);
+
 
             const b = this._thinkness > 0 ? -1 : 1
 
@@ -258,7 +265,7 @@ class RangeLabel {
             }
 
             text.offsetY(this._offset[1] + height / 2 + b * (height / 2 + LABEL_OFFSET_Y));
-            text.offsetX(this._offset[0]);
+            text.offsetX(this._offset[0] + width / 2);
 
 
             text.rotation(angle);
@@ -285,6 +292,8 @@ class RangeLabel {
                 strokeWidth: 1
 
             });
+
+            // line.visible(false)
 
             this._group.add(line)
 
