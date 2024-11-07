@@ -19,6 +19,8 @@ import { onMounted, ref } from "vue";
 import Konva from "konva";
 import { randomData } from "./Tools/Tools";
 import { Collision } from "./render/Collision";
+import { PointLabel } from "./render/PointLabel";
+import { LINE_LABEL_POSITION, LineLabel } from "./render/LineLabel";
 
 const result: any = ref(null);
 
@@ -71,6 +73,42 @@ onMounted(() => {
   const collision = new Collision(data);
 
   result.value = collision.optimize();
+
+  new PointLabel({ x: 120, y: 120 }, { title: "腹杆" }, layer).render();
+
+  new LineLabel(
+    { x: 555, y: 555 },
+    { title: "2222", posW: 100, posH: 333, pos: LINE_LABEL_POSITION.TOP_RIGHT },
+    layer
+  ).render();
+
+  new LineLabel(
+    { x: 555, y: 555 },
+    { title: "2222", posW: 100, posH: 333, pos: LINE_LABEL_POSITION.TOP_LEFT },
+    layer
+  ).render();
+
+  new LineLabel(
+    { x: 555, y: 555 },
+    {
+      title: "2222",
+      posW: 300,
+      posH: 120,
+      pos: LINE_LABEL_POSITION.BUTTOM_LEFT,
+    },
+    layer
+  ).render();
+
+  new LineLabel(
+    { x: 555, y: 555 },
+    {
+      title: "2222",
+      posW: 100,
+      posH: 120,
+      pos: LINE_LABEL_POSITION.BUTTOM_RIGHT,
+    },
+    layer
+  ).render();
 
   layer.draw();
 });
