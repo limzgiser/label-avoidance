@@ -32,7 +32,7 @@ class LineLabel {
     constructor(position: SF_Point, props: any, group: Konva.Group) {
         this._position = position
 
-        this._group = group
+        this._group = new Konva.Group()
         this._props = props
     }
 
@@ -128,6 +128,8 @@ class LineLabel {
         this._group.add(line)
 
         this._group.add(text)
+
+        console.log(this._group.getClientRect())
 
     }
 

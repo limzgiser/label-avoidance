@@ -124,4 +124,7 @@ onMounted(() => {
   right: 20px;
   top: 20px;
 }
+.container {
+  background: #eee;
+}
 </style>
