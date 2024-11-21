@@ -21,8 +21,6 @@ import { randomData } from "./Tools/Tools";
 import { Collision } from "./render/Collision";
 import { PointLabel } from "./render/PointLabel";
 import { LINE_LABEL_POSITION, LineLabel } from "./render/LineLabel";
-import { THINKNESS } from "./Constants";
-import { RangeLabel } from "./render/RangleLabel";
 
 const result: any = ref(null);
 
@@ -45,67 +43,28 @@ onMounted(() => {
   group.zIndex(2);
   layer.add(group);
 
+  // imageObj.onload = function () {
+  //   const background = new Konva.Image({
+  //     x: 0,
+  //     y: 0,
+  //     image: imageObj,
+  //     width: stage.width(),
+  //     height: stage.height(),
+  //   });
+  //   background.zIndex(0);
+  //   // 将背景图片添加到图层
+  //   group.add(background);
+  //   layer.draw(); // 渲染图层
+  // };
+
+  // 设置你的图片路径
+  // imageObj.src = "/public/test.png"; // 替换为你的图片 URL
+
   // 将背景图片添加到层
 
   stage.add(layer);
 
-  // const data = randomData(layer);
-  let data: any = {
-    0: new RangeLabel(
-      {
-        id: 0,
-        start: {
-          x: 40,
-          y: 120,
-        },
-
-        end: {
-          x: 120,
-          y: 80,
-        },
-
-        thinkness: 70,
-        offset: [0, 0],
-      },
-      layer
-    ),
-    // 1: new RangeLabel(
-    //   {
-    //     id: 1,
-    //     start: {
-    //       x: 100,
-    //       y: 100,
-    //     },
-
-    //     end: {
-    //       x: 200,
-    //       y: 200,
-    //     },
-
-    //     thinkness: 30,
-    //     offset: [0, 0],
-    //   },
-    //   layer
-    // ),
-    // 2: new RangeLabel(
-    //   {
-    //     id: 2,
-    //     start: {
-    //       x: 80,
-    //       y: 120,
-    //     },
-
-    //     end: {
-    //       x: 120,
-    //       y: 50,
-    //     },
-
-    //     thinkness: 30,
-    //     offset: [0, 0],
-    //   },
-    //   layer
-    // ),
-  };
+  const data = randomData(layer);
 
   Object.keys(data).forEach((key) => {
     data[key].render();
@@ -114,6 +73,42 @@ onMounted(() => {
   const collision = new Collision(data);
 
   result.value = collision.optimize();
+
+  new PointLabel({ x: 120, y: 120 }, { title: "腹杆" }, layer).render();
+
+  new LineLabel(
+    { x: 555, y: 555 },
+    { title: "2222", posW: 100, posH: 333, pos: LINE_LABEL_POSITION.TOP_RIGHT },
+    layer
+  ).render();
+
+  new LineLabel(
+    { x: 555, y: 555 },
+    { title: "2222", posW: 100, posH: 333, pos: LINE_LABEL_POSITION.TOP_LEFT },
+    layer
+  ).render();
+
+  new LineLabel(
+    { x: 555, y: 555 },
+    {
+      title: "2222",
+      posW: 300,
+      posH: 120,
+      pos: LINE_LABEL_POSITION.BUTTOM_LEFT,
+    },
+    layer
+  ).render();
+
+  new LineLabel(
+    { x: 555, y: 555 },
+    {
+      title: "2222",
+      posW: 100,
+      posH: 120,
+      pos: LINE_LABEL_POSITION.BUTTOM_RIGHT,
+    },
+    layer
+  ).render();
 
   layer.draw();
 });

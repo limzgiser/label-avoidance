@@ -1,6 +1,25 @@
 import Konva from "konva"
 import { SF_Point } from "./Types"
 import { FONST_SIZE, LABEL_LINE_COLOR, LABEL_OFFSET_Y, LABEL_TEXT_COLOR } from "../Constants"
+import { Rectangle } from "./Rectangle"
+
+
+const getCenter = (start: SF_Point, end: SF_Point) => {
+
+
+    return {
+        x: (start.x + end.x) / 2,
+        y: (start.y + end.y) / 2
+    }
+}
+
+const getDistance = (start: SF_Point, end: SF_Point) => {
+    const dx = end.x - start.x;
+    const dy = end.y - start.y;
+
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
 
 
 class RangeLabel {
@@ -21,6 +40,10 @@ class RangeLabel {
     private _text: Konva.Text = new Konva.Text()
 
     private _maxMovex = 0 // 沿着标注方向最大的移动距离
+
+
+
+
 
 
     get start() { return this._start }
@@ -102,6 +125,46 @@ class RangeLabel {
             x, y, width, height, offsetX, offsetY, rotation
         }
     }
+
+
+
+    public getYDirection() {
+
+        const center = getCenter(this._start, this._end);
+        const { start, end } = this.getRenderPoints()
+        const topCenter = getCenter(start, end)
+
+        const baseLineLeft = new Konva.Arrow({
+            points: [center.x, center.y, topCenter.x, topCenter.y],
+            stroke: LABEL_LINE_COLOR,
+            strokeWidth: 1
+        });
+
+        const poits: any = this.getLabelBoxPoints()
+        const rectange = new Rectangle(poits, {})
+
+        const distance = getDistance(center, topCenter)
+        rectange.moveAlongDirection(center, topCenter, distance, 40)
+
+
+        const points = rectange.points.map(item => [item.x, item.y])
+
+        const line = new Konva.Line({
+            points: points.flat(),
+
+            stroke: 'red',
+            strokeWidth: 2,
+            closed: true,
+        })
+
+        this._group.add(line)
+
+        this._group.add(baseLineLeft);
+
+
+
+    }
+
 
     getLabelBoxPoints(offset?: any) {
 
@@ -309,6 +372,8 @@ class RangeLabel {
         renderText()
 
         renderTextBox()
+
+        this.getYDirection()
 
     }
 }
