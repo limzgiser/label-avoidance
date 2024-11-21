@@ -64,7 +64,7 @@ onMounted(() => {
           y: 80,
         },
 
-        thinkness: 70,
+        thinkness: 20,
         offset: [0, 0],
       },
       layer
@@ -82,7 +82,7 @@ onMounted(() => {
           y: 80,
         },
 
-        thinkness: 80,
+        thinkness: 20,
         offset: [0, 0],
       },
       layer
@@ -101,7 +101,7 @@ onMounted(() => {
           y: 80,
         },
 
-        thinkness: 90,
+        thinkness: 20,
         offset: [0, 0],
       },
       layer
@@ -119,7 +119,7 @@ onMounted(() => {
           y: 80,
         },
 
-        thinkness: 100,
+        thinkness: 20,
         offset: [0, 0],
       },
       layer
@@ -137,7 +137,7 @@ onMounted(() => {
           y: 80,
         },
 
-        thinkness: 110,
+        thinkness: 20,
         offset: [0, 0],
       },
       layer

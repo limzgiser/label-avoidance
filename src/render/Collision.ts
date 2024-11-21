@@ -196,11 +196,12 @@ class Collision {
         if (length <= 0) return 0
 
 
-        const step = label.textProperties.height * 2
+
         const points = rectangle.points.slice()
 
         let thinkness = label.thinkness
-        let scale = thinkness > 0 ? 1 : -1
+
+        let step = thinkness * 2
 
 
         const checkMove = (dir: 1 | -1) => {
@@ -218,9 +219,7 @@ class Collision {
 
                 if (valid) {
 
-
-
-                    return (Math.abs(thinkness) + tempStep) * scale * dir
+                    return tempStep * dir
 
                 }
 
@@ -292,19 +291,8 @@ class Collision {
 
             if (yAvoid > 0) {
                 yAvoidCount++
+                console.log(yAvoid)
                 label.thinkness = yAvoid
-
-                const line = new Konva.Line({
-                    points: this.source[i].points.map(item => [item.x, item.y]).flat(),
-
-                    stroke: 'red',
-                    strokeWidth: 2,
-                    closed: true,
-                })
-
-
-
-
                 continue
             }
 
