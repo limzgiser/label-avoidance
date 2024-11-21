@@ -133,36 +133,12 @@ class RangeLabel {
         const center = getCenter(this._start, this._end);
         const { start, end } = this.getRenderPoints()
         const topCenter = getCenter(start, end)
-
-        const baseLineLeft = new Konva.Arrow({
-            points: [center.x, center.y, topCenter.x, topCenter.y],
-            stroke: LABEL_LINE_COLOR,
-            strokeWidth: 1
-        });
-
-        const poits: any = this.getLabelBoxPoints()
-        const rectange = new Rectangle(poits, {})
-
         const distance = getDistance(center, topCenter)
-        rectange.moveAlongDirection(center, topCenter, distance, 40)
-
-
-        const points = rectange.points.map(item => [item.x, item.y])
-
-        const line = new Konva.Line({
-            points: points.flat(),
-
-            stroke: 'red',
-            strokeWidth: 2,
-            closed: true,
-        })
-
-        this._group.add(line)
-
-        this._group.add(baseLineLeft);
-
-
-
+        return {
+            start: center,
+            end: topCenter,
+            distance
+        }
     }
 
 
@@ -372,8 +348,6 @@ class RangeLabel {
         renderText()
 
         renderTextBox()
-
-        this.getYDirection()
 
     }
 }

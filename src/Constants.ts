@@ -6,7 +6,7 @@ const THINKNESS = 15            // 标注线的厚度
 
 const MOVE_X_TIMES = 3          // X 方向避让检测次数 正逆向分别 MOVE_X_TIMES 次
 
-const MOVE_Y_TIMES = 2         // Y 方向避让检测次数 , 每次步长，字体高度的1.2 倍
+const MOVE_Y_TIMES = 10         // Y 方向避让检测次数 , 每次步长，字体高度的1.2 倍
 
 const FONST_SIZE = 18
 

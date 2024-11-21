@@ -69,24 +69,79 @@ onMounted(() => {
       },
       layer
     ),
-    // 1: new RangeLabel(
-    //   {
-    //     id: 1,
-    //     start: {
-    //       x: 100,
-    //       y: 100,
-    //     },
+    1: new RangeLabel(
+      {
+        id: 1,
+        start: {
+          x: 40,
+          y: 120,
+        },
 
-    //     end: {
-    //       x: 200,
-    //       y: 200,
-    //     },
+        end: {
+          x: 120,
+          y: 80,
+        },
 
-    //     thinkness: 30,
-    //     offset: [0, 0],
-    //   },
-    //   layer
-    // ),
+        thinkness: 80,
+        offset: [0, 0],
+      },
+      layer
+    ),
+
+    2: new RangeLabel(
+      {
+        id: 2,
+        start: {
+          x: 40,
+          y: 120,
+        },
+
+        end: {
+          x: 120,
+          y: 80,
+        },
+
+        thinkness: 90,
+        offset: [0, 0],
+      },
+      layer
+    ),
+    3: new RangeLabel(
+      {
+        id: 3,
+        start: {
+          x: 40,
+          y: 120,
+        },
+
+        end: {
+          x: 120,
+          y: 80,
+        },
+
+        thinkness: 100,
+        offset: [0, 0],
+      },
+      layer
+    ),
+    4: new RangeLabel(
+      {
+        id: 4,
+        start: {
+          x: 40,
+          y: 120,
+        },
+
+        end: {
+          x: 120,
+          y: 80,
+        },
+
+        thinkness: 110,
+        offset: [0, 0],
+      },
+      layer
+    ),
     // 2: new RangeLabel(
     //   {
     //     id: 2,
@@ -113,7 +168,7 @@ onMounted(() => {
 
   const collision = new Collision(data);
 
-  result.value = collision.optimize();
+  result.value = collision.optimize(group);
 
   layer.draw();
 });

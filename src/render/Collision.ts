@@ -1,3 +1,4 @@
+import Konva from "konva";
 import { MOVE_X_TIMES, MOVE_Y_TIMES } from "../Constants";
 import { RangeLabel } from "./RangleLabel";
 import { Rectangle } from "./Rectangle";
@@ -108,6 +109,7 @@ class Collision {
 
         return result
     }
+
     /**
      *  移动避让
      *  这里没得x轴方向移动的正负可能有问题，需要测试
@@ -180,7 +182,69 @@ class Collision {
     }
 
 
-    public optimize() {
+    public moveAvoidY(id: string | number) {
+
+        const label: RangeLabel = this.source[id]
+        if (!label) return 0
+
+
+        const rectangle: Rectangle = this.rectangles[id]
+
+        if (!rectangle) return 0
+
+        const length = label.getLength()
+        if (length <= 0) return 0
+
+
+        const step = label.textProperties.height * 2
+        const points = rectangle.points.slice()
+
+        let thinkness = label.thinkness
+        let scale = thinkness > 0 ? 1 : -1
+
+
+        const checkMove = (dir: 1 | -1) => {
+
+            const direction = label.getYDirection()
+
+            for (let i = 0; i < MOVE_Y_TIMES; i++) {
+
+                const tempStep = step * (i + 1)
+
+                rectangle.moveAlongDirection(direction.start, direction.end, direction.distance, tempStep)
+
+
+                const valid = this.checkValidAvoid(id)
+
+                if (valid) {
+
+
+
+                    return (Math.abs(thinkness) + tempStep) * scale * dir
+
+                }
+
+
+            }
+
+
+            return 0
+        }
+
+        const moveUp = checkMove(1)
+
+        if (moveUp) return moveUp
+
+        const moveDown = checkMove(-1)
+
+        if (moveDown) return moveDown
+
+        rectangle.points = points
+
+        return 0
+    }
+
+    public optimize(group: Konva.Group) {
 
 
 
@@ -191,6 +255,7 @@ class Collision {
 
         let mirro = 0
         let move = 0
+        let yAvoidCount = 0
 
         if (!ids.length) return
 
@@ -206,27 +271,44 @@ class Collision {
 
             const label = this.source[id]
 
-            // 翻转避让
-            let avoid = this.mirrorAvoid(id)
-            if (avoid) {
-                label.thinkness = -label.thinkness
-                mirro++
-                continue
-            }
+            // // 翻转避让
+            // let avoid = this.mirrorAvoid(id)
+            // if (avoid) {
+            //     label.thinkness = -label.thinkness
+            //     mirro++
+            //     continue
+            // }
 
-            // 移动避让
-            let step = this.moveAvoid(id)
+            // // 移动避让
+            // let step = this.moveAvoid(id)
 
-            if (step > 0) {
-                move++
+            // if (step > 0) {
+            //     move++
+            //     continue
+            // }
+
+            let yAvoid = this.moveAvoidY(id)
+
+
+            if (yAvoid > 0) {
+                yAvoidCount++
+                label.thinkness = yAvoid
+
+                const line = new Konva.Line({
+                    points: this.source[i].points.map(item => [item.x, item.y]).flat(),
+
+                    stroke: 'red',
+                    strokeWidth: 2,
+                    closed: true,
+                })
+
+
+
+
                 continue
             }
 
         }
-
-        console.log('当前重叠标签:')
-
-        console.log(this.getOverlaps())
 
         const overlap = this.getOverlaps()
 
@@ -237,6 +319,7 @@ class Collision {
             total: ids.length,
             mirro: mirro,
             move: move,
+            yAvoidCount,
             overlap: Object.keys(overlap).length
         }
 
